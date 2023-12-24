@@ -42,7 +42,7 @@ moves = {"up": (0, -cell_size), "down": (0, cell_size), "right": (cell_size, 0),
 
 # game speed
 clock = pygame.time.Clock()
-snake_speed = 8  # 8 is a good normal speed
+snake_speed = 9  # 8 is a good normal speed
 
 # player_image = pygame.image.load('head.png')  # Load the player image
 # snake_head_rect = player_image.get_rect()  # Get the rectangle that encloses the image
@@ -96,9 +96,16 @@ while running:
             [snake_position[0][0] + moves[direction][0], snake_position[0][1] + moves[direction][1]])
         snake_position.pop()
 
-    # generate food and place food
+    # generate food position and place food
     if eaten:
-        food_x, food_y = generate_food_random_position(game_board_x, game_board_y)
+        correct_position_found = False
+        while not correct_position_found:
+            food_x, food_y = generate_food_random_position(game_board_x, game_board_y)
+            for x, y in snake_position:
+                if food_x == x or food_y == y:
+                    break
+            else:
+                correct_position_found = True
         eaten = False
 
     # place food on game_board
@@ -127,7 +134,7 @@ while running:
         game_board.blit(score_rect, (150, 600))
 
     # Game over if snake collides with border walls
-    if snake_position[0][0] not in range(0, 800) or snake_position[0][1] not in range(0, 800):
+    if snake_position[0][0] not in range(0, game_board_x) or snake_position[0][1] not in range(0, game_board_y):
         running = False
 
     # Game over if snake collides with self
