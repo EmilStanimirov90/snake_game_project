@@ -36,14 +36,13 @@ snake_position = deque([[int(game_board_x / 2), int(game_board_y / 2)],
                         [int(game_board_x / 2), int(game_board_y / 2) + cell_size * 3],
                         [int(game_board_x / 2), int(game_board_y / 2) + cell_size * 4]
                         ])
-snake_head = snake_position[0]
 
 # possible moves
 moves = {"up": (0, -cell_size), "down": (0, cell_size), "right": (cell_size, 0), "left": (-cell_size, 0)}
 
 # game speed
 clock = pygame.time.Clock()
-snake_speed = 8
+snake_speed = 8  # 8 is a good normal speed
 
 # player_image = pygame.image.load('head.png')  # Load the player image
 # snake_head_rect = player_image.get_rect()  # Get the rectangle that encloses the image
@@ -115,7 +114,7 @@ while running:
     # eating food and growing
     if snake_position[0] == [food_x, food_y]:
         eaten = True
-        snake_position.append([food_x, food_y])
+        snake_position.append(snake_position[-1])
         total_score += 1
 
     # display_score
@@ -127,7 +126,14 @@ while running:
         score_rect = font.render(f"Press W,A,S,D or the arrow keys to start game", True, blue)
         game_board.blit(score_rect, (150, 600))
 
+    # Game over if snake collides with border walls
+    if snake_position[0][0] not in range(0, 800) or snake_position[0][1] not in range(0, 800):
+        running = False
 
+    # Game over if snake collides with self
+    for i in range(1, len(snake_position)):
+        if snake_position[0] == snake_position[i]:
+            running = False
 
     # game_board.blit(player_image, snake_head_rect)  # Draw the player image at its current position
     # pygame.display.flip()
