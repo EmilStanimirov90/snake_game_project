@@ -21,12 +21,13 @@ pygame.display.set_caption("Giga-Mecha-Snake")
 
 # game variables
 cell_size = 20
-direction = ""  # 1 is up 2 is down 3 is right 4 is left
+direction = "up"  # 1 is up 2 is down 3 is right 4 is left
 moving = False
 eaten = True
 food_x = 0
 food_y = 0
 total_score = 0
+game_started = False
 
 # create snake
 snake_position = deque([[int(game_board_x / 2), int(game_board_y / 2)],
@@ -42,7 +43,7 @@ moves = {"up": (0, -cell_size), "down": (0, cell_size), "right": (cell_size, 0),
 
 # game speed
 clock = pygame.time.Clock()
-snake_speed = 2
+snake_speed = 8
 
 # player_image = pygame.image.load('head.png')  # Load the player image
 # snake_head_rect = player_image.get_rect()  # Get the rectangle that encloses the image
@@ -56,6 +57,10 @@ _green = (91, 149, 0)
 light_python_grey = (60, 63, 65)
 dark_python_grey = (43, 43, 43)
 pink = (240, 60, 123)
+blue = (126, 170, 199)
+
+# font setup
+font = pygame.font.Font(None, 36)
 
 # setup game LOOP with exit
 running = True
@@ -71,19 +76,25 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if (event.key == pygame.K_UP or event.key == pygame.K_w) and direction != "down":
                 direction = "up"
+                game_started = True
                 moving = True
-            if (event.key == pygame.K_DOWN or event.key == pygame.K_s) and direction != "up":
+            elif (event.key == pygame.K_DOWN or event.key == pygame.K_s) and direction != "up":
                 direction = "down"
+                game_started = True
                 moving = True
-            if (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and direction != "left":
+            elif (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and direction != "left":
                 direction = "right"
+                game_started = True
                 moving = True
-            if (event.key == pygame.K_LEFT or event.key == pygame.K_a) and direction != "right":
+            elif (event.key == pygame.K_LEFT or event.key == pygame.K_a) and direction != "right":
                 direction = "left"
+                game_started = True
                 moving = True
+
     # move
     if moving:
-        snake_position.appendleft([snake_position[0][0] + moves[direction][0], snake_position[0][1] + moves[direction][1]])
+        snake_position.appendleft(
+            [snake_position[0][0] + moves[direction][0], snake_position[0][1] + moves[direction][1]])
         snake_position.pop()
 
     # generate food and place food
@@ -107,9 +118,15 @@ while running:
         snake_position.append([food_x, food_y])
         total_score += 1
 
-    #display_score
-    score_text = font.render(f"Score: {total_score}", True, )
-    game_board.blit(score_text, (10, 10))
+    # display_score
+    score_rect = font.render(f"Total score: {total_score * 10}", True, blue)
+    game_board.blit(score_rect, (0, 0))
+
+    # display controls before game start
+    if not game_started:
+        score_rect = font.render(f"Press W,A,S,D or the arrow keys to start game", True, blue)
+        game_board.blit(score_rect, (150, 600))
+
 
 
     # game_board.blit(player_image, snake_head_rect)  # Draw the player image at its current position
