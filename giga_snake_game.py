@@ -28,6 +28,7 @@ food_x = 0
 food_y = 0
 total_score = 0
 game_started = False
+game_menu = False
 
 # create snake
 snake_position = deque([[int(game_board_x / 2), int(game_board_y / 2)],
@@ -67,11 +68,13 @@ while running:
 
     game_board.fill(light_python_grey)
 
+
+
     # iterate trough events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+        # snake keyboard movement key and menu key
         elif event.type == pygame.KEYDOWN:
             if (event.key == pygame.K_UP or event.key == pygame.K_w) and direction != "down":
                 direction = "up"
@@ -89,7 +92,8 @@ while running:
                 direction = "left"
                 game_started = True
                 moving = True
-
+            elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                game_menu = True
     # move
     if moving:
         snake_position.appendleft(
