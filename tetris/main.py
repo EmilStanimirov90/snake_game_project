@@ -1,6 +1,8 @@
 import sys
 import pygame
-import colors
+from grid import Grid
+from colors import Colors
+from bricks import *
 
 # game initialisation /start/
 pygame.init()
@@ -13,6 +15,14 @@ pygame.display.set_caption("Python Tetriz")
 game_speed_FPS = 5
 clock = pygame.time.Clock()
 
+# create grid
+game_grid = Grid()
+
+block = IBrick()
+
+# console grid representation
+game_grid.print_grid()
+
 # game loop
 while True:
 
@@ -21,6 +31,11 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+    # fill in screen
+    screen.fill(Colors.pale_blue)
+    # Drawing
+    game_grid.draw(screen)
+    block.draw(screen)
 
     # refresh screen changes at certain fps
     pygame.display.update()
