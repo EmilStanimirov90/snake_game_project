@@ -1,3 +1,4 @@
+# define colors
 orange = (206, 119, 50)
 green = (91, 149, 88)
 _green = (91, 149, 0)
