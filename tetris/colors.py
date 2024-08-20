@@ -8,7 +8,7 @@ class Colors:
     blue = (126, 170, 199)
     red = (197, 58, 22)
     black = (0, 0, 0)
-    pale_blue = (115, 147, 179)
+    pale_blue = (0, 30, 54)
 
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)

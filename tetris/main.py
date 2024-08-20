@@ -1,8 +1,8 @@
 import sys
 import pygame
-from grid import Grid
 from colors import Colors
-from bricks import *
+from game import Game
+from tetris.grid import Grid
 
 # game initialisation /start/
 pygame.init()
@@ -12,16 +12,15 @@ screen = pygame.display.set_mode((300, 600))
 pygame.display.set_caption("Python Tetriz")
 
 # game speed
-game_speed_FPS = 5
+game_speed_FPS = 60
 clock = pygame.time.Clock()
 
-# create grid
-game_grid = Grid()
+# instantiate game class
+game = Game()
 
-block = IBrick()
-
-# console grid representation
-game_grid.print_grid()
+# move blocks down independently of game loop
+GAME_UPDATE = pygame.USEREVENT
+pygame.time.set_timer(GAME_UPDATE, 200)
 
 # game loop
 while True:
@@ -31,11 +30,23 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP or event.key == pygame.K_w:
+                game.rotate()
+            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                game.move_down()
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                game.move_right()
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                game.move_left()
+            game_started = True
+        # move blocks down independently of game loop
+        if event.type == GAME_UPDATE:
+            game.move_down()
+
     # fill in screen
     screen.fill(Colors.pale_blue)
-    # Drawing
-    game_grid.draw(screen)
-    block.draw(screen)
+    game.draw(screen)
 
     # refresh screen changes at certain fps
     pygame.display.update()
